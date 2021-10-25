@@ -19,7 +19,7 @@ class MoviesPagingSource(
         val position = params.key ?: STARTING_PAGE_INDEX
 
         return try {
-            val response = api.getNowPlaying()
+            val response = api.getNowPlaying(position)
             val movies = response.results
 
             LoadResult.Page(

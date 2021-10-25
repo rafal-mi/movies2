@@ -5,6 +5,6 @@ import org.example.movies.data.Result
 
 interface Api {
 
-    suspend fun getNowPlaying(): NowPlayingResponse
-    suspend fun search(query: String): SearchResponse
+    suspend fun getNowPlaying(page: Int): NowPlayingResponse
+    suspend fun search(query: String, page: Int): SearchResponse
 }

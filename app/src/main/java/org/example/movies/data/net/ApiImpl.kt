@@ -16,8 +16,8 @@ import org.example.movies.data.Result
 class ApiImpl: Api {
     private lateinit var message: String
 
-    override suspend fun getNowPlaying(): NowPlayingResponse {
-        val url = "$API_BASE_URL/movie/now_playing?api_key=${App.instance.api_key}"
+    override suspend fun getNowPlaying(page: Int): NowPlayingResponse {
+        val url = "$API_BASE_URL/movie/now_playing"
 
         message = "URL is $url"
         Log.i(TAG, message)
@@ -33,7 +33,10 @@ class ApiImpl: Api {
         }
 
         return try {
-            var r: NowPlayingResponse = client.get(url)
+            var r: NowPlayingResponse = client.get(url) {
+                parameter("page", "$page")
+                parameter("api_key", App.instance.api_key)
+            }
 
             message = "GET $url resolved with $r"
             Log.i(TAG, message)
@@ -47,10 +50,10 @@ class ApiImpl: Api {
         }
     }
 
-    override suspend fun search(query: String): SearchResponse {
+    override suspend fun search(query: String, page: Int): SearchResponse {
         val encoded = //URLEncoder.encode(query, "utf-8")
             Uri.encode(query)
-        val url = "$API_BASE_URL/search/movie?query=$encoded&api_key=${App.instance.api_key}"
+        val url = "$API_BASE_URL/search/movie"
 
         message = "URL is $url"
         Log.i(TAG, message)
@@ -66,7 +69,11 @@ class ApiImpl: Api {
         }
 
         return try {
-            var r: SearchResponse = client.get(url)
+            var r: SearchResponse = client.get(url) {
+                parameter("query", query)
+                parameter("page", "$page")
+                parameter("api_key", App.instance.api_key)
+            }
 
             message = "GET $url resolved with $r"
             Log.i(TAG, message)

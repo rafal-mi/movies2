@@ -32,10 +32,10 @@ class MainViewModel(
 
     fun setQuery(query: String?) {
         repository.queryFlow.value = query
-//        viewModelScope.launch {
-//            delay(200)
-//            _changeListEvent.value = Event(Date().time)
-//        }
+        viewModelScope.launch {
+            delay(200)
+            _changeListEvent.value = Event(Date().time)
+        }
     }
 
     fun setAutocompleteQuery(query: String) {

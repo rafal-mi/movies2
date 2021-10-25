@@ -65,7 +65,7 @@ class MovieListFragment : Fragment() {
 
         viewModel.changeListEvent.observe(viewLifecycleOwner, EventObserver {
             Log.d(TAG, "Observed event $it")
-            adapter.refresh()
+            binding.recyclerView.scrollToPosition(0)
         })
 
     }

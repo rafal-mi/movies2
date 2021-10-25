@@ -20,6 +20,7 @@ class RepositoryDefault(
                 pageSize = 20,
                 maxSize = 100,
                 enablePlaceholders = false,
+                initialLoadSize = 20
             ),
             pagingSourceFactory = { MoviesPagingSource(App.instance.api, query) }
         ).flow
@@ -30,6 +31,7 @@ class RepositoryDefault(
                 pageSize = 20,
                 maxSize = 100,
                 enablePlaceholders = false,
+                initialLoadSize = 20
             ),
             pagingSourceFactory = { SearchPagingSource(App.instance.api, query) }
         ).flow
@@ -70,7 +72,7 @@ class RepositoryDefault(
         .distinctUntilChanged()
         .mapLatest {
             Log.d(App.TAG, "API call from autocomplete flow")
-            val r = api.search(it)
+            val r = api.search(it, 1)
 
             r.results
         }
