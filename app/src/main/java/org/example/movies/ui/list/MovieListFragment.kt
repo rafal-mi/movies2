@@ -68,6 +68,12 @@ class MovieListFragment : Fragment() {
             binding.recyclerView.scrollToPosition(0)
         })
 
+        viewModel.listPositionEvent.observe(this.viewLifecycleOwner, EventObserver {
+            Log.i(TAG, "Observed Event $it")
+
+            adapter.notifyItemChanged(it)
+        })
+
     }
 
     override fun onDestroyView() {

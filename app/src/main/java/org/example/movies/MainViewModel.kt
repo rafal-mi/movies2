@@ -46,7 +46,12 @@ class MainViewModel(
         message = "Marking item at position $position"
         Log.i(App.TAG, message)
 
-        Date().time
+        movie.favorite = !movie.favorite
+        _listPositionEvent.value = Event(position)
+
+        viewModelScope.launch {
+            repository.save(movie)
+        }
 
     }
 

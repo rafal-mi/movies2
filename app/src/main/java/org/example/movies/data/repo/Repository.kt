@@ -18,4 +18,6 @@ interface Repository {
     val autocompleteQueryFlow: MutableStateFlow<String>
     val autocompleteFlow: Flow<List<Movie>>
 
+    suspend fun save(movie: Movie)
+
 }

@@ -7,12 +7,14 @@ import kotlinx.coroutines.flow.*
 import org.example.movies.App
 import org.example.movies.App.Companion.TAG
 import org.example.movies.data.db.Movie
+import org.example.movies.data.db.MovieDao
 import org.example.movies.data.net.Api
 import org.example.movies.data.paging.MoviesPagingSource
 import org.example.movies.data.paging.SearchPagingSource
 
 class RepositoryDefault(
-    private val api: Api
+    private val api: Api,
+    private val dao: MovieDao
 ) : Repository {
     override fun nowPlayingFLow(query: String) =
         Pager(
@@ -76,6 +78,10 @@ class RepositoryDefault(
 
             r.results
         }
+
+    override suspend fun save(movie: Movie) {
+        dao.insert(movie)
+    }
 
 
 }

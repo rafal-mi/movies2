@@ -10,7 +10,7 @@ import org.example.movies.data.repo.RepositoryDefault
 class App: Application() {
     val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
     val api: Api by lazy { ApiImpl() }
-    val repository: Repository by lazy { RepositoryDefault(api) }
+    val repository: Repository by lazy { RepositoryDefault(api, database.movieDao()) }
     val api_key: String by lazy { getString(R.string.api_key) }
 
 
