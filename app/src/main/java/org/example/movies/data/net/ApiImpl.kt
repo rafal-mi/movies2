@@ -47,7 +47,7 @@ class ApiImpl: Api {
         }
     }
 
-    override suspend fun search(query: String): Result<List<Movie>> {
+    override suspend fun search(query: String): SearchResponse {
         val encoded = //URLEncoder.encode(query, "utf-8")
             Uri.encode(query)
         val url = "$API_BASE_URL/search/movie?query=$encoded&api_key=${App.instance.api_key}"
@@ -71,12 +71,12 @@ class ApiImpl: Api {
             message = "GET $url resolved with $r"
             Log.i(TAG, message)
 
-            Result.Success(r.results)
+            r
         } catch (e: Exception) {
             message = "GET $url rejected with $e"
             Log.e(TAG, message)
 
-            Result.Error(e)
+            throw e
         }
     }
 

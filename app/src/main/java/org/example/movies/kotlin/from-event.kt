@@ -9,17 +9,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 
-fun SearchView.getQueryTextChangeStateFlow(): StateFlow<String> {
+fun SearchView.getQueryTextChangeStateFlow(): StateFlow<Pair<String, Boolean>> {
 
-    val query = MutableStateFlow("")
+    val query = MutableStateFlow(Pair("", false))
 
     setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-        override fun onQueryTextSubmit(query: String?): Boolean {
+        override fun onQueryTextSubmit(query_: String?): Boolean {
+            query_?.apply {
+                query.value = Pair(query_, false)
+            }
             return true
         }
 
         override fun onQueryTextChange(newText: String): Boolean {
-            query.value = newText
+            query.value = Pair(newText, true)
             return true
         }
     })

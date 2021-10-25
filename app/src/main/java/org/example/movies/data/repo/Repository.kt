@@ -11,10 +11,11 @@ import org.example.movies.data.db.Movie
 import org.example.movies.data.paging.MoviesPagingSource
 
 interface Repository {
-    fun pagedFlow(query: String) : Flow<PagingData<Movie>>
+    fun nowPlayingFLow(query: String) : Flow<PagingData<Movie>>
+    val queryFlow: MutableStateFlow<String?>
+    val moviesFlow: Flow<PagingData<Movie>>
 
-    val queryFlow: MutableStateFlow<String>
-
-    val searchFlow: Flow<Result<List<Movie>>>
+    val autocompleteQueryFlow: MutableStateFlow<String>
+    val autocompleteFlow: Flow<List<Movie>>
 
 }

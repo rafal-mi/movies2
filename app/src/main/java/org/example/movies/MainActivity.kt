@@ -16,9 +16,11 @@ import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
+import org.example.movies.App.Companion.TAG
 import org.example.movies.databinding.ActivityMainBinding
 import org.example.movies.kotlin.getQueryTextChangeStateFlow
 
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
-        viewModel.searchLiveData.observe(this, { list ->
+        viewModel.autocompleteLiveData.observe(this, { list ->
             val cursor = MatrixCursor(autocompleteColNames)
             list.forEachIndexed { index, movie ->
                 val row = arrayOf(index, movie.originalTitle)
@@ -80,22 +82,65 @@ class MainActivity : AppCompatActivity() {
         searchView?.imeOptions = EditorInfo.IME_ACTION_DONE
 
         val cursor = MatrixCursor(autocompleteColNames)
-        searchView?.suggestionsAdapter = MyCursorAdapter(this, cursor, false)
+        searchView?.suggestionsAdapter = MyCursorAdapter(this, cursor, false, object: MyCursorAdapter.OnItemClickListener {
+            override fun onItemClick(string: String) {
+                Log.d(TAG, "Suggestion clicked has string $string")
+                searchView!!.setQuery(string, true)
+                searchView!!.clearFocus()
+            }
 
-        searchView?.let { it ->
-            viewModel.queryTextChangeStateFlow = it.getQueryTextChangeStateFlow()
-            viewModel.isQueryTypedNowFlow = viewModel.queryTextChangeStateFlow
-                .debounce(1000)
-                .map {
-                    query = it
-                    it.isNotEmpty()
+        })
+
+//        searchView?.setOnSuggestionListener(object: SearchView.OnSuggestionListener {
+//            override fun onSuggestionSelect(position: Int): Boolean {
+//                val item = searchView!!.suggestionsAdapter.getItem(position)
+//                Log.d(TAG, "Suggestion selected at position $position the item $item")
+//                return false
+//            }
+//
+//            override fun onSuggestionClick(position: Int): Boolean {
+//                val item = searchView!!.suggestionsAdapter.getItem(position)
+//                Log.d(TAG, "Suggestion clicked at position $position the item $item")
+//                return false
+//            }
+//
+//        })
+
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                Log.d(TAG, "Query text submitted: $query")
+
+                query?.let {
+
+                    viewModel.setQuery(query)
+                    (searchView as SearchView).clearFocus()
+
                 }
-            viewModel.isQueryTypedNowLiveData = viewModel.isQueryTypedNowFlow.asLiveData()
-            viewModel.isQueryTypedNowLiveData.observe(this, {
-                Log.d(App.TAG, "Observed query $query")
-                viewModel.setQuery(query)
-            })
-        }
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                Log.d(TAG, "Query text changed: $query")
+
+                query?.let {
+                    viewModel.queryTextFlow.value = it
+                }
+                return true
+            }
+        })
+
+        menuItem.setOnActionExpandListener(object: MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                Log.d(TAG, "menu item collapsing")
+                viewModel.setQuery(null)
+                return true
+            }
+
+        })
 
         return true
     }
