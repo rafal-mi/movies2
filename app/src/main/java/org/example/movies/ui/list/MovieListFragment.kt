@@ -8,20 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 import org.example.movies.*
 import org.example.movies.App.Companion.TAG
+import org.example.movies.data.db.Movie
 import org.example.movies.databinding.FragmentMovieListBinding
+import org.example.movies.ui.detail.MovieFragment
+import org.example.movies.ui.detail.MovieFragmentArgs
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class MovieListFragment : Fragment() {
-
-//    val viewModel: MainViewModel by navGraphViewModels(R.id.nav_graph) {
-//        MainViewModelFactory((requireContext().applicationContext as App).repository, this, null)
-//    }
+class MovieListFragment : Fragment(), MovieListAdapter.OnItemClickListener {
 
     val viewModel: MainViewModel by activityViewModels {
         val context = requireContext().applicationContext as App
@@ -43,7 +43,7 @@ class MovieListFragment : Fragment() {
 
         _binding = FragmentMovieListBinding.inflate(inflater, container, false)
 
-        adapter = MovieListAdapter(viewModel)
+        adapter = MovieListAdapter(viewModel, this)
 
         binding.apply {
             recyclerView.setHasFixedSize(true)
@@ -79,5 +79,10 @@ class MovieListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClick(movie: Movie) {
+        val action = MovieListFragmentDirections.actionMovieListFragmentToMovieFragment(movie)
+        findNavController().navigate(action)
     }
 }

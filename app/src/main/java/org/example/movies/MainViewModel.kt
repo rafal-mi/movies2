@@ -3,6 +3,7 @@ package org.example.movies
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.*
+import androidx.paging.cachedIn
 import androidx.savedstate.SavedStateRegistryOwner
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -25,7 +26,7 @@ class MainViewModel(
 
     val queryTextFlow = MutableStateFlow("")
 
-    val moviesLiveData = repository.moviesFlow.asLiveData()
+    val moviesLiveData = repository.moviesFlow.asLiveData().cachedIn(viewModelScope)
 
     val autocompleteLiveData = repository.autocompleteFlow
         .asLiveData()

@@ -19,10 +19,12 @@
         android:id="@+id/movieFragment"
         android:name="org.example.movies.ui.detail.MovieFragment"
         android:label="@string/movie_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_movie">
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/movieListFragment" />
+        <argument
+            android:name="movie"
+            app:argType="org.example.movies.data.db.Movie"
+            />
+
     </fragment>
 </navigation>
