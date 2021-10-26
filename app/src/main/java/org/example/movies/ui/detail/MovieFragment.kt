@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import org.example.movies.App
 import org.example.movies.App.Companion.TAG
 import org.example.movies.R
 import org.example.movies.databinding.FragmentMovieBinding
@@ -38,8 +40,16 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val movie = args.movie
+        val url = "https://image.tmdb.org/t/p/original/${movie.posterPath}?api_key=${App.instance.api_key}"
 
         Log.d(TAG, "MovieFragment argument is $movie")
+
+        binding.apply {
+            Glide.with(this@MovieFragment)
+                .load(url)
+                .error(R.drawable.ic_baseline_error_24)
+                .into(imageView)
+        }
     }
 
     override fun onDestroyView() {
