@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.MenuItemCompat.collapseActionView
 import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
@@ -87,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "Suggestion clicked has string $string")
                 searchView!!.setQuery(string, true)
                 searchView!!.clearFocus()
+
             }
 
         })
