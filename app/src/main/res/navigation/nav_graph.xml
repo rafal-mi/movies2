@@ -20,11 +20,13 @@
         android:name="org.example.movies.ui.detail.MovieFragment"
         android:label="@string/movie_fragment_label"
         tools:layout="@layout/fragment_movie">
-
+        <argument
+            android:name="position"
+            app:argType="integer"
+            />
         <argument
             android:name="movie"
             app:argType="org.example.movies.data.db.Movie"
             />
-
     </fragment>
 </navigation>

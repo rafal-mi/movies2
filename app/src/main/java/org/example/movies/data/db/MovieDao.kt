@@ -11,6 +11,6 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(movie: Movie)
 
-    @Query("SELECT * FROM movie")
-    fun listFlow(): Flow<List<Movie>>
+    @Query("SELECT * FROM movie WHERE favorite")
+    fun listOfFavoritesFlow(): Flow<List<Movie>>
 }

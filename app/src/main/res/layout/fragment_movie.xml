@@ -13,4 +13,19 @@
         android:layout_height="400dp"
         />
 
+    <TextView
+        android:paddingTop="4dp"
+        android:id="@+id/title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:textAlignment="center"
+        />
+
+    <TextView
+        android:paddingTop="4dp"
+        android:id="@+id/release_date_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:textAlignment="center"
+        />
 </LinearLayout>

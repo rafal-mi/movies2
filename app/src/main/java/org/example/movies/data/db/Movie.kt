@@ -9,7 +9,9 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import org.jetbrains.annotations.NotNull
 
-@Entity
+@Entity(
+    tableName = "movie"
+)
 @Parcelize
 data class Movie(
     @PrimaryKey
@@ -25,6 +27,11 @@ data class Movie(
     val originalTitle: String,
 
     @NotNull
+    @ColumnInfo(name = "release_date")
+    @SerializedName("release_date")
+    val releaseDate: String,
+
+    @NotNull
     @ColumnInfo(name = "backdrop_path")
     @SerializedName("backdrop_path")
     val backdropPath: String,
@@ -32,9 +39,10 @@ data class Movie(
     @NotNull
     @ColumnInfo(name = "poster_path")
     @SerializedName("poster_path")
-    val posterPath: String
+    val posterPath: String,
+
+    @NotNull
+    var favorite: Boolean = false
 
     ) : Parcelable {
-    @Ignore
-    var favorite = false
 }

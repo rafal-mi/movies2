@@ -24,12 +24,17 @@ class MainViewModel(
     private val _changeListEvent = MutableLiveData<Event<Long>>()
     val changeListEvent: LiveData<Event<Long>> = _changeListEvent
 
+    private val _updateMovieEvent = MutableLiveData<Event<Movie>>()
+    val updateMovieEvent: LiveData<Event<Movie>> = _updateMovieEvent
+
     val queryTextFlow = MutableStateFlow("")
 
     val moviesLiveData = repository.moviesFlow.asLiveData().cachedIn(viewModelScope)
 
     val autocompleteLiveData = repository.autocompleteFlow
         .asLiveData()
+
+    val dbListLiveData = repository.listFlow.asLiveData()
 
     fun setQuery(query: String?) {
         repository.queryFlow.value = query
@@ -43,7 +48,7 @@ class MainViewModel(
         repository.autocompleteQueryFlow.value = query
     }
 
-    fun mark(movie: Movie, position: Int) {
+    fun mark(position: Int, movie: Movie) {
         message = "Marking item at position $position"
         Log.i(App.TAG, message)
 

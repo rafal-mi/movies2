@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import androidx.paging.LoadState
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 import org.example.movies.*
 import org.example.movies.App.Companion.TAG
@@ -35,6 +37,7 @@ class MovieListFragment : Fragment(), MovieListAdapter.OnItemClickListener {
     private val binding get() = _binding!!
 
     private lateinit var adapter: MovieListAdapter
+    private var favorites = arrayListOf<Long>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,13 +54,56 @@ class MovieListFragment : Fragment(), MovieListAdapter.OnItemClickListener {
             recyclerView.adapter = adapter
         }
 
+        adapter.addLoadStateListener { loadState ->
+            binding.apply {
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                textViewError.isVisible = loadState.source.refresh is LoadState.Error
+
+                if(loadState.source.refresh is LoadState.NotLoading &&
+                    loadState.append.endOfPaginationReached &&
+                    adapter.itemCount < 1) {
+                    recyclerView.isVisible = false
+                    textViewEmpty.isVisible = true
+                } else {
+                    textViewEmpty.isVisible = false
+                }
+
+            }
+            if(loadState.refresh is LoadState.NotLoading) {
+                updateSnapshot()
+            }
+
+        }
+
         viewModel.moviesLiveData.observe(viewLifecycleOwner) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
+        viewModel.dbListLiveData.observe(viewLifecycleOwner) { list_ ->
+            list_?.let { list ->
+                favorites.clear()
+                list.forEach { favorites.add(it.id) }
+                updateSnapshot()
+            }
+        }
 
         return binding.root
 
+    }
+
+    fun updateSnapshot() {
+        val snapshot = adapter.snapshot()
+        snapshot.forEach { it ->
+            it?.let { item ->
+                favorites.forEach { id->
+                    if(item.id == id) {
+                        item.favorite = true
+                    }
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,8 +127,8 @@ class MovieListFragment : Fragment(), MovieListAdapter.OnItemClickListener {
         _binding = null
     }
 
-    override fun onItemClick(movie: Movie) {
-        val action = MovieListFragmentDirections.actionMovieListFragmentToMovieFragment(movie)
+    override fun onItemClick(position: Int, movie: Movie) {
+        val action = MovieListFragmentDirections.actionMovieListFragmentToMovieFragment(position, movie)
         findNavController().navigate(action)
     }
 }

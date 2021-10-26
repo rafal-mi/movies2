@@ -20,4 +20,6 @@ interface Repository {
 
     suspend fun save(movie: Movie)
 
+    val listFlow: Flow<List<Movie>>
+
 }

@@ -83,5 +83,8 @@ class RepositoryDefault(
         dao.insert(movie)
     }
 
+    override val listFlow: Flow<List<Movie>> =
+        dao.listOfFavoritesFlow()
+
 
 }

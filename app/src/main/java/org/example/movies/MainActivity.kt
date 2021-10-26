@@ -78,6 +78,8 @@ class MainActivity : AppCompatActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
 
+        menu.findItem(R.id.action_favorite).isVisible = false
+
         val menuItem: MenuItem = menu.findItem(R.id.action_search)
         searchView = menuItem.actionView as SearchView
         searchView?.imeOptions = EditorInfo.IME_ACTION_DONE

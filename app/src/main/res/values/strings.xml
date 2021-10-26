@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Movies2</string>
     <string name="action_search">Search</string>
+    <string name="action_favorite">Favorite</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="movie_list_fragment_label">Movies</string>
@@ -8,6 +9,7 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="item_id">%1$d</string>
+    <string name="release_date">(%1$s)</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>

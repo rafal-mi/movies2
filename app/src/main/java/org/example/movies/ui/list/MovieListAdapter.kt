@@ -46,7 +46,7 @@ class MovieListAdapter(
                 if(position != RecyclerView.NO_POSITION) {
                     val item = getItem(position)
                     item?.let {
-                        listener.onItemClick(it)
+                        listener.onItemClick(position, it)
                     }
                 }
 
@@ -73,7 +73,7 @@ class MovieListAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick(movie: Movie)
+        fun onItemClick(position: Int, movie: Movie)
     }
 
 }
