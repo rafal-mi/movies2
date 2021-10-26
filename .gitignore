@@ -15,4 +15,5 @@
 local.properties
 
 node_modules
+.env
 
