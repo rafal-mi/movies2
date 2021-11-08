@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
+import androidx.paging.ExperimentalPagingApi
 import com.bumptech.glide.Glide
 import org.example.movies.App
 import org.example.movies.App.Companion.TAG
@@ -19,6 +20,7 @@ import org.example.movies.databinding.FragmentMovieBinding
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
+@ExperimentalPagingApi
 class MovieFragment : Fragment() {
     val viewModel: MainViewModel by activityViewModels {
         val context = requireContext().applicationContext as App

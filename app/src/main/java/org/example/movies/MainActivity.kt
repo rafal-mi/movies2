@@ -19,17 +19,20 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.MenuItemCompat.collapseActionView
 import androidx.lifecycle.asLiveData
+import androidx.paging.ExperimentalPagingApi
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import org.example.movies.App.Companion.TAG
 import org.example.movies.databinding.ActivityMainBinding
 import org.example.movies.kotlin.getQueryTextChangeStateFlow
 
+@ExperimentalPagingApi
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    @ExperimentalPagingApi
     private val viewModel by viewModels<MainViewModel> {
         val context = this.applicationContext as App
         MainViewModelFactory(context.repository, this, null)

@@ -1,20 +1,23 @@
 package org.example.movies.data.repo
 
 import android.util.Log
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+import androidx.paging.*
 import kotlinx.coroutines.flow.*
 import org.example.movies.App
 import org.example.movies.App.Companion.TAG
+import org.example.movies.data.db.AppDatabase
 import org.example.movies.data.db.Movie
 import org.example.movies.data.db.MovieDao
 import org.example.movies.data.net.Api
 import org.example.movies.data.paging.MoviesPagingSource
+import org.example.movies.data.paging.MoviesRemoteMediator
 import org.example.movies.data.paging.SearchPagingSource
 
+@ExperimentalPagingApi
 class RepositoryDefault(
     private val api: Api,
-    private val dao: MovieDao
+    private val dao: MovieDao,
+    private val database: AppDatabase
 ) : Repository {
     override fun nowPlayingFLow(query: String) =
         Pager(
@@ -27,16 +30,26 @@ class RepositoryDefault(
             pagingSourceFactory = { MoviesPagingSource(App.instance.api, query) }
         ).flow
 
-    private fun queriedFlow(query: String?) =
-        Pager(
+    private fun queriedFlow(query: String?): Flow<PagingData<Movie>> {
+        // appending '%' so we can allow other characters to be before and after the query string
+        val dbQuery = "%${(query ?: "").replace(' ', '%')}%"
+        val pagingSourceFactory = { database.movieDao().moviesByTitle(dbQuery) }
+
+        return Pager(
             config = PagingConfig(
                 pageSize = 20,
-                maxSize = 100,
+                // maxSize = 100,
                 enablePlaceholders = false,
-                initialLoadSize = 20
+                // initialLoadSize = 20
             ),
-            pagingSourceFactory = { SearchPagingSource(App.instance.api, query) }
+            remoteMediator = MoviesRemoteMediator(
+                query,
+                api,
+                database
+            ),
+            pagingSourceFactory = pagingSourceFactory
         ).flow
+    }
 
     override val queryFlow = MutableStateFlow<String?>(null)
     override val moviesFlow = queryFlow
@@ -82,9 +95,5 @@ class RepositoryDefault(
     override suspend fun save(movie: Movie) {
         dao.insert(movie)
     }
-
-    override val listFlow: Flow<List<Movie>> =
-        dao.listOfFavoritesFlow()
-
 
 }

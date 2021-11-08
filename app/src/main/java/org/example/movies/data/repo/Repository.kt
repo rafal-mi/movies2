@@ -19,7 +19,4 @@ interface Repository {
     val autocompleteFlow: Flow<List<Movie>>
 
     suspend fun save(movie: Movie)
-
-    val listFlow: Flow<List<Movie>>
-
 }

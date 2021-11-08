@@ -34,8 +34,6 @@ class MainViewModel(
     val autocompleteLiveData = repository.autocompleteFlow
         .asLiveData()
 
-    val dbListLiveData = repository.listFlow.asLiveData()
-
     fun setQuery(query: String?) {
         repository.queryFlow.value = query
         viewModelScope.launch {

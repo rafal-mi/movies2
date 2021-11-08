@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 import org.example.movies.*
@@ -23,6 +24,7 @@ import org.example.movies.ui.detail.MovieFragmentArgs
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
+@ExperimentalPagingApi
 class MovieListFragment : Fragment(), MovieListAdapter.OnItemClickListener {
 
     val viewModel: MainViewModel by activityViewModels {
@@ -40,7 +42,8 @@ class MovieListFragment : Fragment(), MovieListAdapter.OnItemClickListener {
     private var favorites = arrayListOf<Long>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -71,39 +74,14 @@ class MovieListFragment : Fragment(), MovieListAdapter.OnItemClickListener {
                 }
 
             }
-            if(loadState.refresh is LoadState.NotLoading) {
-                updateSnapshot()
-            }
-
         }
 
         viewModel.moviesLiveData.observe(viewLifecycleOwner) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
-        viewModel.dbListLiveData.observe(viewLifecycleOwner) { list_ ->
-            list_?.let { list ->
-                favorites.clear()
-                list.forEach { favorites.add(it.id) }
-                updateSnapshot()
-            }
-        }
-
         return binding.root
 
-    }
-
-    fun updateSnapshot() {
-        val snapshot = adapter.snapshot()
-        snapshot.forEach { it ->
-            it?.let { item ->
-                favorites.forEach { id->
-                    if(item.id == id) {
-                        item.favorite = true
-                    }
-                }
-            }
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

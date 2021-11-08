@@ -31,15 +31,13 @@ data class Movie(
     @SerializedName("release_date")
     val releaseDate: String,
 
-    @NotNull
     @ColumnInfo(name = "backdrop_path")
     @SerializedName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
 
-    @NotNull
     @ColumnInfo(name = "poster_path")
     @SerializedName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
 
     @NotNull
     var favorite: Boolean = false
